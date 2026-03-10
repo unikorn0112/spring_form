@@ -47,7 +47,7 @@
         async function initLIFF() {
             try {
                 // ⚠️ 記得更換為您在春天宣言 Provider 下建立的 LIFF ID
-                await liff.init({ liffId: "請填入新LIFF_ID" }); 
+                await liff.init({ liffId: "2009401693-1p7y4VdT" }); 
                 if (!liff.isLoggedIn()) { liff.login(); }
                 else {
                     const profile = await liff.getProfile();
@@ -69,7 +69,7 @@
 
             try {
                 // ⚠️ 記得更換為春天宣言專用的 GAS 網址
-                await fetch('請填入新GAS網址', {
+                await fetch('https://script.google.com/macros/s/AKfycbxiyiC1X4L-t6gx1WdQRtvTwKzSPqT4QZ_DEcD2aMSmTotxx2eVk3X6Ul5HjksGaFo/exec', {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify({
