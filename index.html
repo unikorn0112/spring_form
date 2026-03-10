@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>春天宣言｜聯繫我們</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f3f0f7; padding: 20px; font-family: "Microsoft JhengHei", sans-serif; }
+        .container { max-width: 500px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(110, 66, 193, 0.2); margin: auto; }
+        .btn-primary { background-color: #6f42c1; border: none; font-weight: bold; margin-top: 20px; }
+        .btn-primary:hover { background-color: #5a32a3; }
+        label { font-weight: bold; margin-top: 15px; color: #4b2c85; }
+        .name-hint { font-size: 0.8em; color: #6f42c1; font-weight: normal; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3 class="text-center mb-4" style="color: #6f42c1;">春天宣言｜聯繫我們</h3>
+        <div class="form-group">
+            <label>姓名 <span class="name-hint">(LINE 自動帶入)</span></label>
+            <input type="text" id="userName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>聯絡電話</label>
+            <input type="tel" id="userPhone" class="form-control" placeholder="請輸入聯絡電話">
+        </div>
+        <div class="form-group">
+            <label>諮詢事由</label>
+            <select id="subject" class="form-control">
+                <option value="課程諮詢">課程諮詢 (AI 媒體影像/康養培訓)</option>
+                <option value="商務合作">商務合作 (異業結盟/講師邀約)</option>
+                <option value="場地租借">場地租借 / 活動協辦</option>
+                <option value="其他">其他建議</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>需求詳情描述</label>
+            <textarea id="detail" class="form-control" rows="4" placeholder="請簡單描述您的需求..."></textarea>
+        </div>
+        <button id="submitBtn" class="btn btn-primary btn-block">確認提交訊息</button>
+    </div>
+
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script>
+        let uID = "";
+        async function initLIFF() {
+            try {
+                // ⚠️ 記得更換為您在春天宣言 Provider 下建立的 LIFF ID
+                await liff.init({ liffId: "請填入新LIFF_ID" }); 
+                if (!liff.isLoggedIn()) { liff.login(); }
+                else {
+                    const profile = await liff.getProfile();
+                    uID = profile.userId;
+                    document.getElementById('userName').value = profile.displayName;
+                }
+            } catch (err) { console.log(err); }
+        }
+        initLIFF();
+
+        document.getElementById('submitBtn').onclick = async function() {
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const subject = document.getElementById('subject').value;
+            const detail = document.getElementById('detail').value;
+
+            if (!name || !phone) { alert('請填寫姓名與電話'); return; }
+            this.disabled = true;
+
+            try {
+                // ⚠️ 記得更換為春天宣言專用的 GAS 網址
+                await fetch('請填入新GAS網址', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({
+                        userId: uID, userName: name, phone: phone, subject: subject, detail: detail
+                    })
+                });
+
+                alert('提交成功\n\n感謝您的聯繫\n\n請點擊〔確定〕返回對話視窗');
+                liff.closeWindow();
+            } catch (e) {
+                alert('錯誤：' + e);
+                this.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
